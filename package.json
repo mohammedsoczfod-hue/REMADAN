@@ -1,0 +1,20 @@
+{
+  "name": "ramadan-contest",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "framer-motion": "^12.30.0",
+    "lucide-react": "^0.563.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-router-dom": "^7.13.0",
+    "xlsx": "^0.18.5"
+  }
+}
