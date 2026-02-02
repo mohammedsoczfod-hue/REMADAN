@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { Upload, Database, BarChart3, Trash2 } from 'lucide-react';
+import { Upload, Database, BarChart3, Trash2, LogOut, PlusCircle, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Admin = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,6 +34,7 @@ const Admin = () => {
 
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
+        if (!file) return;
         const reader = new FileReader();
         reader.onload = (evt) => {
             const bstr = evt.target.result;
@@ -61,6 +63,7 @@ const Admin = () => {
 
             const updated = [...questions, ...parsed];
             updateQuestions(updated);
+            alert(`تم استيراد ${parsed.length} سؤال بنجاح`);
         };
         reader.readAsBinaryString(file);
     };
@@ -95,7 +98,7 @@ const Admin = () => {
         const ws = XLSX.utils.json_to_sheet(questions.map(q => ({
             "السؤال": q.question,
             "الخيار أ": q.options[0],
-            "الخيار ب": q.options[1],
+            "الخيار b": q.options[1],
             "الخيار ج": q.options[2],
             "الخيار د": q.options[3],
             "الإجابة": q.answer,
@@ -111,130 +114,235 @@ const Admin = () => {
         return (
             <div style={{
                 height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'var(--green-gradient)', direction: 'rtl'
+                background: 'var(--blue-gradient)', direction: 'rtl', padding: '20px'
             }}>
-                <form className="premium-card" style={{ padding: '40px', background: '#fff', width: '350px' }} onSubmit={handleLogin}>
-                    <h2 style={{ textAlign: 'center', marginBottom: '30px' }}>دخول الإدارة</h2>
-                    <div style={{ marginBottom: '15px' }}>
-                        <label>اسم المستخدم:</label>
-                        <input type="text" style={{ width: '100%', padding: '10px', marginTop: '5px' }}
-                            onChange={e => setLoginData({ ...loginData, username: e.target.value })} />
+                <motion.form
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="glass-morphism"
+                    style={{ padding: '40px', width: '100%', maxWidth: '400px', border: '1px solid rgba(255,255,255,0.1)' }}
+                    onSubmit={handleLogin}
+                >
+                    <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+                        <img src="/logo.png" alt="Logo" style={{ width: '80px', marginBottom: '15px' }} />
+                        <h2 className="gold-text" style={{ fontSize: '1.8rem' }}>دخول الإدارة</h2>
                     </div>
-                    <div style={{ marginBottom: '25px' }}>
-                        <label>كلمة المرور:</label>
-                        <input type="password" style={{ width: '100%', padding: '10px', marginTop: '5px' }}
-                            onChange={e => setLoginData({ ...loginData, password: e.target.value })} />
+
+                    <div style={{ marginBottom: '20px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', color: 'var(--accent)' }}>اسم المستخدم</label>
+                        <input
+                            type="text"
+                            style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '8px' }}
+                            placeholder="username"
+                            onChange={e => setLoginData({ ...loginData, username: e.target.value })}
+                        />
                     </div>
-                    <button type="submit" className="btn-primary" style={{ width: '100%' }}>دخول</button>
-                </form>
+
+                    <div style={{ marginBottom: '30px' }}>
+                        <label style={{ display: 'block', marginBottom: '8px', color: 'var(--accent)' }}>كلمة المرور</label>
+                        <input
+                            type="password"
+                            style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', borderRadius: '8px' }}
+                            placeholder="••••••••"
+                            onChange={e => setLoginData({ ...loginData, password: e.target.value })}
+                        />
+                    </div>
+
+                    <button type="submit" className="btn-primary" style={{ width: '100%', padding: '15px', fontSize: '1.1rem' }}>
+                        تسجيل الدخول
+                    </button>
+                </motion.form>
             </div>
         );
     }
 
     return (
-        <div style={{ padding: '40px', background: '#f5f5f5', minHeight: '100vh', direction: 'rtl' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-                <h1 style={{ color: 'var(--primary)' }}>لوحة التحكم الإدارية</h1>
-                <button onClick={exportToExcel} className="btn-secondary">تصدير الأسئلة (Excel)</button>
-            </div>
+        <div style={{
+            minHeight: '100vh',
+            background: 'var(--background)',
+            color: 'var(--text)',
+            direction: 'rtl',
+            padding: '20px'
+        }}>
+            {/* Navbar */}
+            <nav className="glass-morphism" style={{ padding: '15px 30px', marginBottom: '30px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderRadius: '15px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <img src="/logo.png" alt="Logo" style={{ width: '40px' }} />
+                    <h1 style={{ fontSize: '1.4rem', fontWeight: 'bold' }} className="gold-text">لوحة إدارة المسابقة</h1>
+                </div>
+                <div style={{ display: 'flex', gap: '15px' }}>
+                    <button onClick={exportToExcel} className="btn-secondary" style={{ fontSize: '0.9rem' }}>تصدير بيانات Excel</button>
+                    <button onClick={() => setIsLoggedIn(false)} className="lifeline" style={{ padding: '8px 15px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <LogOut size={18} /> خروج
+                    </button>
+                </div>
+            </nav>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '30px' }}>
-                {/* Main Content */}
-                <div>
-                    <section className="premium-card" style={{ padding: '25px', background: '#fff', marginBottom: '30px' }}>
-                        <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
-                            <Upload size={20} style={{ marginLeft: '10px' }} />
-                            استيراد الأسئلة من Excel
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '25px', maxWidth: '1400px', margin: '0 auto' }}>
+
+                {/* Right Column: Actions */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+
+                    {/* Quick Stats Grid */}
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '15px' }}>
+                        <div className="glass-morphism" style={{ padding: '20px', textAlign: 'center' }}>
+                            <div style={{ color: 'var(--accent)', fontSize: '0.9rem', marginBottom: '5px' }}>إجمالي الأسئلة</div>
+                            <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{questions.length}</div>
+                        </div>
+                        <div className="glass-morphism" style={{ padding: '20px', textAlign: 'center' }}>
+                            <div style={{ color: 'var(--secondary)', fontSize: '0.9rem', marginBottom: '5px' }}>أعلى مستوى</div>
+                            <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>15</div>
+                        </div>
+                    </div>
+
+                    {/* Import Questions */}
+                    <section className="glass-morphism" style={{ padding: '25px' }}>
+                        <h2 style={{ fontSize: '1.1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }} className="gold-text">
+                            <Upload size={20} /> استيراد من Excel
                         </h2>
-                        <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} style={{ padding: '10px', border: '1px dashed #ccc', width: '100%' }} />
+                        <div className="file-input-wrapper" style={{ position: 'relative' }}>
+                            <input
+                                type="file"
+                                accept=".xlsx, .xls"
+                                onChange={handleFileUpload}
+                                style={{
+                                    width: '100%', padding: '30px',
+                                    border: '2px dashed rgba(255,255,255,0.1)',
+                                    borderRadius: '12px', textAlign: 'center',
+                                    background: 'rgba(255,255,255,0.02)',
+                                    cursor: 'pointer'
+                                }}
+                            />
+                            <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', pointerEvents: 'none', opacity: 0.6 }}>
+                                اسحب ملف Excel هنا أو انقر للإضافة
+                            </div>
+                        </div>
                     </section>
 
-                    <section className="premium-card" style={{ padding: '25px', background: '#fff', marginBottom: '30px' }}>
-                        <h2 style={{ fontSize: '1.2rem', marginBottom: '20px' }}>إضافة سؤال جديد يدوياً</h2>
-                        <form onSubmit={handleAddQuestion} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                    {/* Manual Question Form */}
+                    <section className="glass-morphism" style={{ padding: '25px' }}>
+                        <h2 style={{ fontSize: '1.1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }} className="gold-text">
+                            <PlusCircle size={20} /> إضافة سؤال يدوياً
+                        </h2>
+                        <form onSubmit={handleAddQuestion} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
                             <div style={{ gridColumn: 'span 2' }}>
-                                <label>نص السؤال:</label>
-                                <textarea rows="2" style={{ width: '100%', padding: '8px' }} value={newQuestion.question}
-                                    onChange={e => setNewQuestion({ ...newQuestion, question: e.target.value })} required />
+                                <label style={{ display: 'block', marginBottom: '8px', color: 'var(--accent)', fontSize: '0.9rem' }}>نص السؤال</label>
+                                <textarea
+                                    rows="2"
+                                    style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+                                    value={newQuestion.question}
+                                    onChange={e => setNewQuestion({ ...newQuestion, question: e.target.value })}
+                                    required
+                                />
                             </div>
                             {newQuestion.options.map((opt, i) => (
                                 <div key={i}>
-                                    <label>الخيار {String.fromCharCode(1571 + i)}:</label>
-                                    <input type="text" style={{ width: '100%', padding: '8px' }} value={opt}
+                                    <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>الخيار {['أ', 'ب', 'ج', 'د'][i]}</label>
+                                    <input
+                                        type="text"
+                                        style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+                                        value={opt}
                                         onChange={e => {
                                             const newOpts = [...newQuestion.options];
                                             newOpts[i] = e.target.value;
                                             setNewQuestion({ ...newQuestion, options: newOpts });
-                                        }} required />
+                                        }}
+                                        required
+                                    />
                                 </div>
                             ))}
                             <div>
-                                <label>الإجابة الصحيحة:</label>
-                                <select style={{ width: '100%', padding: '8px' }} value={newQuestion.answer}
-                                    onChange={e => setNewQuestion({ ...newQuestion, answer: e.target.value })} required>
-                                    <option value="">اختر الإجابة</option>
-                                    {newQuestion.options.map((opt, i) => opt && <option key={i} value={opt}>{opt}</option>)}
+                                <label style={{ display: 'block', marginBottom: '8px', color: 'var(--secondary)', fontSize: '0.9rem' }}>الإجابة الصحيحة</label>
+                                <select
+                                    style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+                                    value={newQuestion.answer}
+                                    onChange={e => setNewQuestion({ ...newQuestion, answer: e.target.value })}
+                                    required
+                                >
+                                    <option value="" style={{ background: 'var(--background)' }}>اختر الإجابة</option>
+                                    {newQuestion.options.map((opt, i) => opt && <option key={i} value={opt} style={{ background: 'var(--background)' }}>{opt}</option>)}
                                 </select>
                             </div>
                             <div>
-                                <label>مستوى الصعوبة (1-15):</label>
-                                <input type="number" min="1" max="15" style={{ width: '100%', padding: '8px' }} value={newQuestion.difficulty}
-                                    onChange={e => setNewQuestion({ ...newQuestion, difficulty: parseInt(e.target.value) })} />
+                                <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem' }}>مستوى الصعوبة (1-15)</label>
+                                <input
+                                    type="number" min="1" max="15"
+                                    style={{ width: '100%', padding: '10px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+                                    value={newQuestion.difficulty}
+                                    onChange={e => setNewQuestion({ ...newQuestion, difficulty: parseInt(e.target.value) })}
+                                />
                             </div>
-                            <button type="submit" className="btn-primary" style={{ gridColumn: 'span 2', marginTop: '10px' }}>حفظ السؤال</button>
+                            <button type="submit" className="btn-primary" style={{ gridColumn: 'span 2', padding: '12px', marginTop: '10px' }}>
+                                <CheckCircle2 size={18} style={{ marginLeft: '8px' }} /> حفظ السؤال في النظام
+                            </button>
                         </form>
-                    </section>
-
-                    <section className="premium-card" style={{ padding: '25px', background: '#fff' }}>
-                        <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
-                            <Database size={20} style={{ marginLeft: '10px' }} />
-                            الأسئلة الحالية ({questions.length})
-                        </h2>
-                        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                                <thead>
-                                    <tr style={{ background: '#f9f9f9', borderBottom: '2px solid #eee' }}>
-                                        <th style={{ padding: '10px', textAlign: 'right' }}>السؤال</th>
-                                        <th style={{ padding: '10px', textAlign: 'right' }}>الإجابة</th>
-                                        <th style={{ padding: '10px', width: '50px' }}>حذف</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {questions.map(q => (
-                                        <tr key={q.id} style={{ borderBottom: '1px solid #eee' }}>
-                                            <td style={{ padding: '10px' }}>{q.question}</td>
-                                            <td style={{ padding: '10px', color: 'green' }}>{q.answer}</td>
-                                            <td style={{ padding: '10px' }}><Trash2 size={16} color="red" style={{ cursor: 'pointer' }} onClick={() => deleteQuestion(q.id)} /></td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
                     </section>
                 </div>
 
-                {/* Sidebar Stats */}
-                <div>
-                    <section className="premium-card" style={{ padding: '25px', background: '#fff', position: 'sticky', top: '20px' }}>
-                        <h2 style={{ fontSize: '1.2rem', marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
-                            <BarChart3 size={20} style={{ marginLeft: '10px' }} />
-                            إحصائيات
+                {/* Left Column: List & Stats */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
+
+                    {/* Distribution Stats */}
+                    <section className="glass-morphism" style={{ padding: '25px' }}>
+                        <h2 style={{ fontSize: '1.1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }} className="gold-text">
+                            <BarChart3 size={20} /> توزيع الأسئلة عبر المستويات
                         </h2>
-                        <div style={{ fontSize: '0.9rem' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                                <span>إجمالي الأسئلة:</span>
-                                <span style={{ fontWeight: 'bold' }}>{stats.total}</span>
-                            </div>
-                            <hr style={{ margin: '15px 0', border: '1px solid #eee' }} />
-                            <h3 style={{ fontSize: '1rem', marginBottom: '10px' }}>حسب المستوى (عدد الأسئلة):</h3>
-                            <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-                                {Array.from({ length: 15 }, (_, i) => i + 1).map(lvl => (
-                                    <div key={lvl} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0' }}>
-                                        <span>مستوى {lvl}:</span>
-                                        <span>{stats.byDifficulty[lvl] || 0}</span>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxHeight: '300px', overflowY: 'auto', paddingLeft: '10px' }}>
+                            {Array.from({ length: 15 }, (_, i) => i + 1).map(lvl => (
+                                <div key={lvl} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <span style={{ width: '70px', fontSize: '0.85rem' }}>مستوى {lvl}</span>
+                                    <div style={{ flex: 1, height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '4px', overflow: 'hidden' }}>
+                                        <motion.div
+                                            initial={{ width: 0 }}
+                                            animate={{ width: `${Math.min((stats.byDifficulty[lvl] || 0) * 10, 100)}%` }}
+                                            style={{ height: '100%', background: 'var(--blue-gradient)' }}
+                                        />
                                     </div>
-                                ))}
-                            </div>
+                                    <span style={{ width: '30px', textAlign: 'left', fontWeight: 'bold' }}>{stats.byDifficulty[lvl] || 0}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Question List */}
+                    <section className="glass-morphism" style={{ padding: '25px', flex: 1 }}>
+                        <h2 style={{ fontSize: '1.1rem', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '10px' }} className="gold-text">
+                            <Database size={20} /> قاعدة البيانات الحالية
+                        </h2>
+                        <div style={{ maxHeight: '500px', overflowY: 'auto', borderRadius: '10px' }}>
+                            <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 8px' }}>
+                                <thead>
+                                    <tr style={{ color: 'var(--accent)', fontSize: '0.9rem' }}>
+                                        <th style={{ padding: '10px', textAlign: 'right' }}>السؤال</th>
+                                        <th style={{ padding: '10px', textAlign: 'right' }}>الإجابة</th>
+                                        <th style={{ padding: '10px', width: '50px' }}></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <AnimatePresence>
+                                        {questions.map((q, idx) => (
+                                            <motion.tr
+                                                layout
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                key={q.id}
+                                                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.05)' }}
+                                            >
+                                                <td style={{ padding: '15px', borderRadius: '10px 0 0 10px', fontSize: '0.9rem' }}>{q.question}</td>
+                                                <td style={{ padding: '15px', color: 'var(--secondary)', fontSize: '0.9rem' }}>{q.answer}</td>
+                                                <td style={{ padding: '15px', borderRadius: '0 10px 10px 0' }}>
+                                                    <Trash2
+                                                        size={18}
+                                                        style={{ cursor: 'pointer', color: '#ff4d4d', opacity: 0.7 }}
+                                                        onClick={() => deleteQuestion(q.id)}
+                                                    />
+                                                </td>
+                                            </motion.tr>
+                                        ))}
+                                    </AnimatePresence>
+                                </tbody>
+                            </table>
                         </div>
                     </section>
                 </div>
@@ -244,3 +352,4 @@ const Admin = () => {
 };
 
 export default Admin;
+
