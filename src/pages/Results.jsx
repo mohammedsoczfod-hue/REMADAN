@@ -11,13 +11,14 @@ const Results = () => {
     return (
         <div style={{
             flex: 1,
-            background: 'var(--green-gradient)',
-            color: '#fff',
+            background: 'var(--emerald-gradient)',
+            color: 'var(--text)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            padding: '20px'
+            padding: '20px',
+            minHeight: '100vh'
         }}>
             <motion.div
                 className="premium-card"

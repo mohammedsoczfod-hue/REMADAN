@@ -98,7 +98,7 @@ const Admin = () => {
         const ws = XLSX.utils.json_to_sheet(questions.map(q => ({
             "السؤال": q.question,
             "الخيار أ": q.options[0],
-            "الخيار b": q.options[1],
+            "الخيار ب": q.options[1],
             "الخيار ج": q.options[2],
             "الخيار د": q.options[3],
             "الإجابة": q.answer,
@@ -114,7 +114,7 @@ const Admin = () => {
         return (
             <div style={{
                 height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: 'var(--blue-gradient)', direction: 'rtl', padding: '20px'
+                background: 'var(--emerald-gradient)', direction: 'rtl', padding: '20px'
             }}>
                 <motion.form
                     initial={{ opacity: 0, y: 20 }}
@@ -178,7 +178,7 @@ const Admin = () => {
                 </div>
             </nav>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '25px', maxWidth: '1400px', margin: '0 auto' }}>
+            <div className="responsive-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 350px', gap: '25px', maxWidth: '1400px', margin: '0 auto' }}>
 
                 {/* Right Column: Actions */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '25px' }}>
@@ -229,7 +229,7 @@ const Admin = () => {
                                 <label style={{ display: 'block', marginBottom: '8px', color: 'var(--accent)', fontSize: '0.9rem' }}>نص السؤال</label>
                                 <textarea
                                     rows="2"
-                                    style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }}
+                                    style={{ width: '100%', padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px', boxSizing: 'border-box' }}
                                     value={newQuestion.question}
                                     onChange={e => setNewQuestion({ ...newQuestion, question: e.target.value })}
                                     required

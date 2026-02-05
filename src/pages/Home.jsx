@@ -26,8 +26,8 @@ const Home = () => {
             textAlign: 'center',
             padding: '40px 20px',
             flex: 1,
-            background: 'var(--blue-gradient)',
-            color: '#fff',
+            background: 'var(--emerald-gradient)',
+            color: 'var(--text)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -58,11 +58,11 @@ const Home = () => {
                 style={{ zIndex: 1, width: '100%', maxWidth: '600px' }}
             >
                 <motion.div variants={itemVariants}>
-                    <img src="/logo.png" alt="Logo" style={{ width: '180px', marginBottom: '20px', filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.5))' }} />
-                    <h1 style={{ fontSize: '3.5rem', marginBottom: '5px', fontWeight: '900' }} className="modern-title">
+                    <img src="/logo.png" alt="Logo" style={{ width: 'clamp(120px, 30vw, 180px)', marginBottom: '20px', filter: 'drop-shadow(0 4px 15px rgba(0,0,0,0.5))' }} />
+                    <h1 style={{ marginBottom: '5px', fontWeight: '900' }} className="modern-title">
                         المسابقة الرمضانية
                     </h1>
-                    <h2 className="gold-text" style={{ fontSize: '2rem', marginBottom: '50px' }}>
+                    <h2 className="gold-text" style={{ fontSize: 'var(--h2-size)', marginBottom: 'clamp(20px, 5vw, 50px)' }}>
                         تجمع شباب شط العرب
                     </h2>
                 </motion.div>
@@ -70,7 +70,7 @@ const Home = () => {
                 <motion.div
                     variants={itemVariants}
                     className="glass-morphism"
-                    style={{ padding: '50px 30px', background: 'rgba(255,255,255,0.02)' }}
+                    style={{ padding: 'var(--section-padding)', background: 'rgba(255,255,255,0.02)' }}
                 >
                     <div style={{ display: 'grid', gap: '25px' }}>
                         <motion.button
@@ -84,7 +84,7 @@ const Home = () => {
                             ابدأ المسابقة الآن
                         </motion.button>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '15px' }}>
                             <button className="btn-secondary" onClick={() => navigate('/results')}>
                                 <Users size={18} style={{ marginLeft: '8px' }} />
                                 السجل

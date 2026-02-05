@@ -1,20 +1,31 @@
 :root {
-  --primary: #1b4e9b;
-  /* Royal Blue from logo */
-  --secondary: #d4af37;
-  /* Keep Gold for premium accents */
-  --accent: #3bb9e0;
-  /* Light Sky Blue from logo */
-  --background: #0b1a31;
-  /* Deep Navy Background */
-  --text: #fdfdfd;
-  --card-bg: rgba(255, 255, 255, 0.05);
-  --glass: rgba(255, 255, 255, 0.08);
-  --gold-gradient: linear-gradient(135deg, #d4af37 0%, #f9e27d 50%, #d4af37 100%);
-  --blue-gradient: linear-gradient(135deg, #1b4e9b 0%, #0b1a31 100%);
-  --button-hover: rgba(59, 185, 224, 0.2);
-  --font-main: 'Tajawal', sans-serif;
+  --primary: #059669;
+  /* Emerald Green - Modern & Vibrant */
+  --secondary: #F59E0B;
+  /* Amber Gold - Sunny & Energetic */
+  --accent: #10B981;
+  /* Light Emerald Accent */
+  --background: #F8FAFC;
+  /* Ghost White - Cool Background */
+  --text: #0F172A;
+  /* Slate 900 - Dark Text */
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --glass: rgba(255, 255, 255, 0.85);
+  --gold-gradient: linear-gradient(135deg, #F59E0B 0%, #FBBF24 50%, #F59E0B 100%);
+  --emerald-gradient: linear-gradient(135deg, #059669 0%, #10B981 100%);
+  --button-hover: rgba(16, 185, 129, 0.2);
+  --font-main: 'Cairo', 'Tajawal', sans-serif;
+  --container-max: 1200px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --h1-size: clamp(2rem, 8vw, 3.5rem);
+  --h2-size: clamp(1.4rem, 5vw, 2rem);
+  --section-padding: clamp(20px, 5vw, 50px);
 }
+
+/* Base styles for responsiveness are now handled by clamp() variables */
+
 
 * {
   box-sizing: border-box;
@@ -41,9 +52,9 @@ body {
 .premium-card {
   background: var(--card-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(5, 150, 105, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px 0 rgba(5, 150, 105, 0.1);
 }
 
 .gold-text {
@@ -58,12 +69,12 @@ body {
   background: var(--gold-gradient);
   border: none;
   padding: 14px 36px;
-  border-radius: 50px;
-  color: #004d40;
-  font-weight: bold;
+  border-radius: var(--radius-lg);
+  color: #0F172A;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
 }
 
 .btn-primary:hover {
@@ -73,18 +84,19 @@ body {
 
 .btn-secondary {
   background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--primary);
   padding: 12px 34px;
-  border-radius: 50px;
-  color: #fff;
-  font-weight: bold;
+  border-radius: var(--radius-lg);
+  color: var(--primary);
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #fff;
+  background: var(--button-hover);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 @keyframes pulse {
@@ -106,8 +118,37 @@ body {
 }
 
 .glass-morphism {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(5, 150, 105, 0.08);
+}
+
+@media (max-width: 768px) {
+  .premium-card {
+    padding: var(--radius-md) !important;
+    width: 100% !important;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    padding: 12px 24px;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .modern-title {
+    font-size: var(--h1-size) !important;
+    line-height: 1.2;
+  }
+
+  .responsive-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.modern-title {
+  font-size: var(--h1-size);
 }

@@ -127,119 +127,144 @@ const Quiz = () => {
     const currentQuestion = questions[currentIndex] || questions[0];
 
     return (
-        <div style={{
+        <div className="quiz-container" style={{
             flex: 1,
-            background: 'var(--blue-gradient)',
-            color: '#fff',
-            display: 'grid',
-            gridTemplateColumns: 'minmax(300px, 1fr) 300px',
+            background: 'var(--emerald-gradient)',
+            color: 'var(--text)',
+            display: 'flex',
+            flexDirection: 'column',
             padding: '20px',
-            gap: '20px'
+            gap: '20px',
+            overflowY: 'auto'
         }}>
-            {/* Quiz Area */}
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                {/* Header: Timer and Lifelines */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                        <img src="/logo.png" alt="Logo" style={{ width: '50px' }} onClick={() => navigate('/')} />
-                        <div style={{ display: 'flex', gap: '15px' }}>
-                            <button className={`lifeline ${!lifelines.fiftyFifty ? 'used' : ''}`} onClick={() => useLifeline('fiftyFifty')}>50:50</button>
-                            <button className={`lifeline ${!lifelines.callFriend ? 'used' : ''}`} onClick={() => useLifeline('callFriend')}><Phone size={20} /></button>
-                            <button className={`lifeline ${!lifelines.audience ? 'used' : ''}`} onClick={() => useLifeline('audience')}><Users size={20} /></button>
-                            <button className={`lifeline ${!lifelines.scientist ? 'used' : ''}`} onClick={() => useLifeline('scientist')}><HelpCircle size={20} /></button>
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr',
+                gap: '20px',
+                width: '100%',
+                maxWidth: '1200px',
+                margin: '0 auto'
+            }} className="responsive-quiz-grid">
+
+                {/* Quiz Area */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
+                    {/* Header: Timer and Lifelines */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                            <img src="/logo.png" alt="Logo" style={{ width: '50px' }} onClick={() => navigate('/')} />
+                            <div style={{ display: 'flex', gap: '15px' }}>
+                                <button className={`lifeline ${!lifelines.fiftyFifty ? 'used' : ''}`} onClick={() => useLifeline('fiftyFifty')}>50:50</button>
+                                <button className={`lifeline ${!lifelines.callFriend ? 'used' : ''}`} onClick={() => useLifeline('callFriend')}><Phone size={20} /></button>
+                                <button className={`lifeline ${!lifelines.audience ? 'used' : ''}`} onClick={() => useLifeline('audience')}><Users size={20} /></button>
+                                <button className={`lifeline ${!lifelines.scientist ? 'used' : ''}`} onClick={() => useLifeline('scientist')}><HelpCircle size={20} /></button>
+                            </div>
+                        </div>
+                        <div style={{
+                            width: 'clamp(60px, 15vw, 80px)', height: 'clamp(60px, 15vw, 80px)', border: '5px solid var(--secondary)',
+                            borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontSize: 'clamp(1rem, 4vw, 1.5rem)', fontWeight: 'bold'
+                        }}>
+                            {timeLeft}
                         </div>
                     </div>
-                    <div style={{
-                        width: '80px', height: '80px', border: '5px solid var(--secondary)',
-                        borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '1.5rem', fontWeight: 'bold'
-                    }}>
-                        {timeLeft}
+
+                    {/* Question */}
+                    <div style={{ textAlign: 'center', padding: '40px' }}>
+                        <motion.div
+                            key={currentIndex}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="premium-card"
+                            style={{ padding: 'clamp(15px, 4vw, 30px)', background: 'rgba(0,0,0,0.3)', marginBottom: '30px' }}
+                        >
+                            <h2 style={{ fontSize: 'var(--h2-size)' }}>{currentQuestion.question}</h2>
+                        </motion.div>
+
+                        <div className="options-grid">
+                            {currentQuestion.options.map((opt, i) => (
+                                <motion.button
+                                    key={opt}
+                                    whileHover={!removedOptions.includes(opt) ? { scale: 1.02 } : {}}
+                                    whileTap={!removedOptions.includes(opt) ? { scale: 0.98 } : {}}
+                                    onClick={() => handleAnswer(opt)}
+                                    disabled={removedOptions.includes(opt)}
+                                    style={{
+                                        padding: '15px',
+                                        borderRadius: '10px',
+                                        border: '1px solid var(--secondary)',
+                                        background: 'rgba(255,255,255,0.1)',
+                                        color: '#fff',
+                                        cursor: 'pointer',
+                                        visibility: removedOptions.includes(opt) ? 'hidden' : 'visible'
+                                    }}
+                                >
+                                    <span className="gold-text" style={{ marginRight: '10px' }}>{String.fromCharCode(65 + i)}:</span>
+                                    {opt}
+                                </motion.button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
-                {/* Question */}
-                <div style={{ textAlign: 'center', padding: '40px' }}>
-                    <motion.div
-                        key={currentIndex}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="premium-card"
-                        style={{ padding: '30px', background: 'rgba(0,0,0,0.3)', marginBottom: '30px' }}
-                    >
-                        <h2>{currentQuestion.question}</h2>
-                    </motion.div>
-
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-                        {currentQuestion.options.map((opt, i) => (
-                            <motion.button
-                                key={opt}
-                                whileHover={!removedOptions.includes(opt) ? { scale: 1.02 } : {}}
-                                whileTap={!removedOptions.includes(opt) ? { scale: 0.98 } : {}}
-                                onClick={() => handleAnswer(opt)}
-                                disabled={removedOptions.includes(opt)}
-                                style={{
-                                    padding: '15px',
-                                    borderRadius: '10px',
-                                    border: '1px solid var(--secondary)',
-                                    background: 'rgba(255,255,255,0.1)',
-                                    color: '#fff',
-                                    cursor: 'pointer',
-                                    visibility: removedOptions.includes(opt) ? 'hidden' : 'visible'
-                                }}
-                            >
-                                <span className="gold-text" style={{ marginRight: '10px' }}>{String.fromCharCode(65 + i)}:</span>
-                                {opt}
-                            </motion.button>
+                {/* Sidebar: Progress */}
+                <div className="premium-card" style={{ background: 'rgba(0,0,0,0.4)', padding: '20px', display: 'flex', flexDirection: 'column' }}>
+                    <h3 style={{ textAlign: 'center', marginBottom: '20px' }} className="gold-text">مستويات الجائزة</h3>
+                    <div style={{ display: 'flex', flexDirection: 'column-reverse', flex: 1 }}>
+                        {levels.map((lvl, i) => (
+                            <div key={lvl} style={{
+                                padding: '8px 15px',
+                                margin: '2px 0',
+                                borderRadius: '5px',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                background: i === currentIndex ? 'var(--secondary)' : 'transparent',
+                                color: i === currentIndex ? '#004d40' : (i < currentIndex ? 'var(--secondary)' : '#fff'),
+                                fontWeight: i === currentIndex ? 'bold' : 'normal',
+                                opacity: i > currentIndex && i !== currentIndex ? 0.5 : 1
+                            }}>
+                                <span>{i + 1}</span>
+                                <span>{lvl} ريال</span>
+                            </div>
                         ))}
                     </div>
                 </div>
-            </div>
 
-            {/* Sidebar: Progress */}
-            <div className="premium-card" style={{ background: 'rgba(0,0,0,0.4)', padding: '20px', display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ textAlign: 'center', marginBottom: '20px' }} className="gold-text">مستويات الجائزة</h3>
-                <div style={{ display: 'flex', flexDirection: 'column-reverse', flex: 1 }}>
-                    {levels.map((lvl, i) => (
-                        <div key={lvl} style={{
-                            padding: '8px 15px',
-                            margin: '2px 0',
-                            borderRadius: '5px',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            background: i === currentIndex ? 'var(--secondary)' : 'transparent',
-                            color: i === currentIndex ? '#004d40' : (i < currentIndex ? 'var(--secondary)' : '#fff'),
-                            fontWeight: i === currentIndex ? 'bold' : 'normal',
-                            opacity: i > currentIndex && i !== currentIndex ? 0.5 : 1
-                        }}>
-                            <span>{i + 1}</span>
-                            <span>{lvl} ريال</span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-
-            <style>{`
+                <style>{`
+        .quiz-container { min-height: 100vh; }
+        @media (min-width: 992px) {
+            .responsive-quiz-grid { grid-template-columns: 1fr 300px !important; }
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+            .premium-card h2 { font-size: 1.2rem; }
+        }
         .lifeline {
-          width: 50px;
-          height: 40px;
+          width: 45px;
+          height: 38px;
           border: 1px solid var(--secondary);
-          background: rgba(255,255,255,0.1);
+          background: rgba(245,158,11,0.1);
           color: var(--secondary);
-          border-radius: 8px;
+          border-radius: var(--radius-md);
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           font-weight: bold;
+          font-size: 0.8rem;
         }
         .lifeline.used {
           opacity: 0.3;
-          background: #333;
-          border-color: #666;
+          background: #e5e7eb;
+          border-color: #9ca3af;
           cursor: not-allowed;
         }
       `}</style>
+            </div>
         </div>
     );
 };
